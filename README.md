@@ -150,3 +150,132 @@ for i in range(0, len(data)):
 orig_data.head()
 ```
 
+![](Images/orig_data.PNG)
+
+### Splitting the Data & Creating the Response Variable
+
+The dataset was then copied so that three distinct scenarios could be studied, based on the type of drug user. In each of these three datasets a new variable was created which will be used as the response variable in the predictive modelling section later on. Given the nature of the answers that the respondents gave for each substance (CL0 to CL6 mentioned earlier, i.e. Never tried, Used in Last Decade etc.), it was determined that this would have to be a binary variable (0 or 1) for classification modelling. 
+The method used for calculating the output variable was therefore the defining feature that separates the datasets. This was done to investigate any possible differences in predictive power of the Big Five traits for those who are more active users and for those who use more dangerous drugs.
+
+The three datasets were created with the following logic and code: 
+1) A participant who has tried at least one illegal drug at any point in their lives. 
+The list of illegal substances used can be seen in the code below. The binary variable (‘Try_Drug’) was set to 1 if a participant answered CL1, CL2, CL3, CL4, CL5 or CL6 for at least one drug in the dataset and was therefore 0 if they answered CL0 for all illegal drugs.
+
+```python
+# Dataset 1: Tried illegal drugs at least once
+
+df1 = data.copy()
+df1 = df1.drop(columns=['ID','Country','Ethnicity'])
+df1['Try_Drug'] = ''
+TryD = df1['Try_Drug']
+
+drugs = ['Amphet','Amyl','Benzos','Cannabis','Coke','Crack','Ecstasy','Heroin','Ketamine','LSD','Meth','Mushrooms','VSA']
+
+for i in range(0, len(df1)):
+    tot = 0
+    for j in drugs:
+        if df1[j][i] != "CL0":
+            tot = tot + 1
+        if tot > 0:
+            TryD.iat[i] = 1
+        else:
+            TryD.iat[i] = 0       
+
+# Separate data for t-test
+Nvr_Tried = pd.DataFrame().assign(Nscore = orig_data['Nscore'], Escore = orig_data['Escore'], Oscore = orig_data['Oscore'], Ascore = orig_data['AScore'], Cscore = orig_data['Cscore'], 
+            Impulsive = orig_data['Impulsive'], SS = orig_data['SS'] ,Try_Drug = df1['Try_Drug'])
+
+Tried = Nvr_Tried.loc[Nvr_Tried['Try_Drug'] == 1]
+Tried_Samp = Tried.sample(n=300)
+Nvr_Tried = Nvr_Tried.loc[Nvr_Tried['Try_Drug'] == 0]
+```
+
+### 2) A participant who has used any illegal drug in the past year. 
+This dataset was for more recent (active) users and also has the benefit of being more balanced. Dataset 1 had 1585 positives (1) and only 300 negatives (0). The benefit of having a more balanced dataset will be seen in the modelling section later on. This dataset on the other hand has 1174 positives and 711 negatives.
+
+```python
+# Dataset 2: Used illegal drugs in past year
+
+df2 = data.copy()
+df2 = df2.drop(columns=['ID','Country','Ethnicity'])
+df2['Try_Drug'] = ''
+TryD2 = df2['Try_Drug']
+
+for i in range(0, len(df2)):
+    tot = 0
+    for j in drugs:
+        if df2[j][i] == "CL3" or df2[j][i] == "CL4" or df2[j][i] == "CL5" or df2[j][i] == "CL6":
+            tot = tot + 1
+        if tot > 0:
+            TryD2.iat[i] = 1
+        else:
+            TryD2.iat[i] = 0    
+
+# Separate data for t-test
+Recent_N = pd.DataFrame().assign(Nscore = orig_data['Nscore'], Escore = orig_data['Escore'], Oscore = orig_data['Oscore'], Ascore = orig_data['AScore'], Cscore = orig_data['Cscore'], 
+            Impulsive = orig_data['Impulsive'], SS = orig_data['SS'] ,Try_Drug = df2['Try_Drug'])
+
+Recent_Y = Recent_N.loc[Recent_N['Try_Drug'] == 1]
+Recent_Y_Samp = Recent_Y.sample(n=711)
+Recent_N = Recent_N.loc[Recent_N['Try_Drug'] == 0]
+```
+
+### 3) A participant who has tried ‘hard’ drugs (heroin, crack, meth) at least once in their lives. 
+The final dataset was for participants who engaged in very risky behaviour. While many drugs in this study can be viewed as party drugs that are often used infrequently – heroin, crack and methamphetamine are extremely addictive and dangerous substances. The dataset has 579 positives and 1306 negatives. 
+
+```python
+# Dataset 3: Tried hard drugs (heroin, crack or meth) at least once
+
+df3 = data.copy()
+df3 = df3.drop(columns=['ID','Country','Ethnicity'])
+df3['Try_Drug'] = ''
+TryD3 = df3['Try_Drug']
+
+for i in range(0, len(df3)):
+    if (df3['Heroin'][i] != 'CL0' or df3['Meth'][i] != 'CL0' or df3['Crack'][i] != 'CL0'):
+        TryD3.iat[i] = 1
+    else:
+        TryD3.iat[i] = 0 
+
+# Separate data for t-test
+Heavy_N = pd.DataFrame().assign(Nscore = orig_data['Nscore'], Escore = orig_data['Escore'], Oscore = orig_data['Oscore'], Ascore = orig_data['AScore'], Cscore = orig_data['Cscore'], 
+            Impulsive = orig_data['Impulsive'], SS = orig_data['SS'] ,Try_Drug = df3['Try_Drug'])
+
+Heavy_Y = Heavy_N.loc[Heavy_N['Try_Drug'] == 1]
+Heavy_N = Heavy_N.loc[Heavy_N['Try_Drug'] == 0] 
+Heavy_N_Samp = Heavy_N.sample(n=579)
+```
+
+As can be seen in the code above, in addition to creating the response variable, two other actions were performed for each dataset. Firstly, some columns were removed, namely: ID, country and ethnicity. Ethnicity was removed as over 90% of the respondents happened to be white, meaning that this couldn’t be fairly analysed as an unbiased predictor variable. Country was removed for the same reason, as UK and USA alone account for 85% of the data.
+
+The second action that was performed was to create new subsets of each dataset, to be used for the t-tests that will be carried out in the next section. These new subsets are simply dataframes that contain the Big 5 scores for each participant, with one dataframe being for users and the other for non-users (i.e. add row to dataframe conditional on whether Try_Drug is equal to 1 or 0). 
+
+
+# Exploratory Data Analysis
+Several aspects of the data were examined before the machine learning models were applied (next section). This section highlights some key insights about the data, including descriptive statistics, checks for normality, t-tests, a graphical representation of the popularity of each substance and correlations between the use of each substance.
+
+-	Descriptive Statistics
+As mentioned previously the overall dataset contains responses from 1885 survey participants. Based on dataset 1 we can see that 84.1% of the participants (1585) have tried at least one illegal drug. This is quite high and may represent a self-selection bias in the people who participated in the survey. Further analysis shows that approximately 15% of participants have tried heroin (280 people) and dataset 3 shows that over 30% of the sample have tried either heroin, meth or crack. 
+
+The mean values and standard deviations for each of the Big Five personality traits were calculated in python and are shown below. These stats are for the entire sample of 1885 participants.
+
+```python
+# Descriptive Statistics of Personality Traits
+
+# Means
+print("Means:")
+print("Nscore: {:.2f}".format(orig_data['Nscore'].mean()))
+print("Escore: {:.2f}".format(orig_data['Escore'].mean()))
+print("Oscore: {:.2f}".format(orig_data['Oscore'].mean()))
+print("Ascore: {:.2f}".format(orig_data['AScore'].mean()))
+print("Cscore: {:.2f}".format(orig_data['Cscore'].mean()))
+
+# Standard Devs
+print("\nStandard Deviations:")
+print("Nscore: {:.2f}".format(orig_data['Nscore'].std()))
+print("Escore: {:.2f}".format(orig_data['Escore'].std()))
+print("Oscore: {:.2f}".format(orig_data['Oscore'].std()))
+print("Ascore: {:.2f}".format(orig_data['AScore'].std()))
+print("Cscore: {:.2f}".format(orig_data['Cscore'].std()))
+```
+

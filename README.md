@@ -384,7 +384,8 @@ These values further demonstrate that the data for all traits has some non-norma
 Given the skewness of the data it was decided to use the Wilcoxon-Signed-Rank test, which is a non-parametric t-test that can be used for data that doesn’t follow the assumptions of the standard t-test. Wilcoxon tests the significance of the differences between means of two groups. The test was carried out separately for each of our three datasets.   
 
 The means for each dataset and the results of the Wilcoxon t-tests are shown below:  
-
+  
+### Dataset 1:  
 ```python
 # Comparing sample means of drug users and non-users: Dataset 1
 
@@ -434,23 +435,7 @@ A: 5.752E-19
 O: 7.628E-07  
 C: 3.169E-17  
 
-```python
-# Comparing sample means of drug users and non-users: Dataset 2
-
-print("Means of Non-Users:")
-print("N: {:.2f}".format(Recent_N['Nscore'].mean()))
-print("E: {:.2f}".format(Recent_N['Escore'].mean()))
-print("O: {:.2f}".format(Recent_N['Oscore'].mean()))
-print("A: {:.2f}".format(Recent_N['Ascore'].mean()))
-print("C: {:.2f}".format(Recent_N['Cscore'].mean()))
-
-print("\nMeans of Users:")
-print("N: {:.2f}".format(Recent_Y_Samp['Nscore'].mean()))
-print("E: {:.2f}".format(Recent_Y_Samp['Escore'].mean()))
-print("O: {:.2f}".format(Recent_Y_Samp['Oscore'].mean()))
-print("A: {:.2f}".format(Recent_Y_Samp['Ascore'].mean()))
-print("C: {:.2f}".format(Recent_Y_Samp['Cscore'].mean()))
-```
+### Dataset 2:   
 
 Means of Non-Users:  
 N: 33.80  
@@ -466,16 +451,7 @@ O: 47.52
 A: 42.05  
 C: 39.69  
 
-```python
-# Wilcoxon Signed Rank test (non-normal data) to determine differences in means: Dataset 2
-
-print("N: {:.3E}".format(stats.wilcoxon(Recent_N['Nscore'], Recent_Y_Samp['Nscore']).pvalue))
-print("E: {:.3E}".format(stats.wilcoxon(Recent_N['Escore'], Recent_Y_Samp['Escore']).pvalue))
-print("A: {:.3E}".format(stats.wilcoxon(Recent_N['Oscore'], Recent_Y_Samp['Oscore']).pvalue))
-print("O: {:.3E}".format(stats.wilcoxon(Recent_N['Ascore'], Recent_Y_Samp['Ascore']).pvalue))
-print("C: {:.3E}".format(stats.wilcoxon(Recent_N['Cscore'], Recent_Y_Samp['Cscore']).pvalue))
-```
-
+T-test:  
 P-values:  
 N: 2.186E-14  
 E: 4.211E-04  
@@ -483,23 +459,7 @@ A: 1.328E-42
 O: 5.423E-13  
 C: 5.749E-35  
 
-```python
-# Comparing sample means of drug users and non-users: Dataset 3
-
-print("Means of Non-Users:")
-print("N: {:.2f}".format(Heavy_N_Samp['Nscore'].mean()))
-print("E: {:.2f}".format(Heavy_N_Samp['Escore'].mean()))
-print("O: {:.2f}".format(Heavy_N_Samp['Oscore'].mean()))
-print("A: {:.2f}".format(Heavy_N_Samp['Ascore'].mean()))
-print("C: {:.2f}".format(Heavy_N_Samp['Cscore'].mean()))
-
-print("\nMeans of Users:")
-print("N: {:.2f}".format(Heavy_Y['Nscore'].mean()))
-print("E: {:.2f}".format(Heavy_Y['Escore'].mean()))
-print("O: {:.2f}".format(Heavy_Y['Oscore'].mean()))
-print("A: {:.2f}".format(Heavy_Y['Ascore'].mean()))
-print("C: {:.2f}".format(Heavy_Y['Cscore'].mean()))
-```
+### Dataset 3:  
 
 Means of Non-Users:  
 N: 35.04  
@@ -515,16 +475,7 @@ O: 47.94
 A: 41.19  
 C: 39.07  
 
-```python
-# Wilcoxon Signed Rank test (non-normal data) to determine differences in means: Dataset 3
-
-print("N: {:.3E}".format(stats.wilcoxon(Heavy_N_Samp['Nscore'], Heavy_Y['Nscore']).pvalue))
-print("E: {:.3E}".format(stats.wilcoxon(Heavy_N_Samp['Escore'], Heavy_Y['Escore']).pvalue))
-print("A: {:.3E}".format(stats.wilcoxon(Heavy_N_Samp['Oscore'], Heavy_Y['Oscore']).pvalue))
-print("O: {:.3E}".format(stats.wilcoxon(Heavy_N_Samp['Ascore'], Heavy_Y['Ascore']).pvalue))
-print("C: {:.3E}".format(stats.wilcoxon(Heavy_N_Samp['Cscore'], Heavy_Y['Cscore']).pvalue))
-```
-
+T-test:  
 P-values:  
 N: 5.479E-11  
 E: 3.469E-06  
@@ -627,19 +578,19 @@ The strongest correlation was between LSD and mushrooms. This makes sense as the
 
 A separate dataframe was created representing a subset of the top X strongest correlations. The frequency of each substance in the top correlation dataframe was counted and displayed. When taking the top 10 or the top 20 pairs, Ecstasy is the most frequent substance in both cases. If we take the top 30 it loses the top spot to Coke and Amphetamines. 
 
-[('Ecstasy', 7), 
-('Mushrooms', 6), 
-('Amphet', 6), 
-('LSD', 4), 
-('Coke', 4), 
-('Cannabis', 4), 
-('Heroin', 2), 
-('Legalh', 2), 
-('Crack', 1), 
-('Nicotine', 1), 
-('Meth', 1), 
-('Ketamine', 1), 
-('Benzos', 1)]  
+[('Ecstasy', 7),   
+('Mushrooms', 6),   
+('Amphet', 6),   
+('LSD', 4),   
+('Coke', 4),   
+('Cannabis', 4),   
+('Heroin', 2),   
+('Legalh', 2),   
+('Crack', 1),   
+('Nicotine', 1),   
+('Meth', 1),   
+('Ketamine', 1),   
+('Benzos', 1)]    
 
 # Predictive Modelling  
 
@@ -777,7 +728,7 @@ print("Specificity: {:.2f}%".format(SpecificityXGB))
 
 The results of the predictive modelling were vastly different depending on the dataset that was used. Although the accuracy scores were high for almost every model (approximately for 80%), the models had very low specificity rates for dataset 1 and very low recall rates for dataset 3. All of the models on dataset 2 performed well on all three measures. 
 
-Dataset 1 Results:
+### Dataset 1 Results:
 
 Naive-Bayes:  
 Accuracy: 79.55%  
@@ -810,59 +761,59 @@ Recall: 59.08%
 Specificity: 25.45%  
 
 
-Dataset 2 Results:
+### Dataset 2 Results:  
 
-Naive-Bayes:  
-Accuracy: 78.56%
-Standard Deviation: 2.69%
-Recall: 77.82%
-Specificity: 74.91% 
+Naive-Bayes:    
+Accuracy: 78.56%  
+Standard Deviation: 2.69%  
+Recall: 77.82%  
+Specificity: 74.91%   
 
-SVM:  
-ccuracy: 80.96%
-Standard Deviation: 3.10%
-Recall: 79.94%
-Specificity: 75.85% 
+SVM:    
+Accuracy: 80.96%  
+Standard Deviation: 3.10%  
+Recall: 79.94%  
+Specificity: 75.85%   
+  
+Decision Tree:  
+Accuracy: 72.04%  
+Standard Deviation: 4.58%  
+Recall: 70.16%  
+Specificity: 62.64%    
+  
+Random Forest:    
+Accuracy: 77.56%  
+Standard Deviation: 4.28%  
+Recall: 76.92%  
+Specificity: 74.34%    
+  
+XGBoost:  
+Accuracy: 78.27%  
+Standard Deviation: 3.61%  
+Recall: 76.92%  
+Specificity: 71.51%  
 
-Decision Tree:
-Accuracy: 72.04%
-Standard Deviation: 4.58%
-Recall: 70.16%
-Specificity: 62.64%  
-
-Random Forest:  
-Accuracy: 77.56%
-Standard Deviation: 4.28%
-Recall: 76.92%
-Specificity: 74.34%  
-
-XGBoost:
-Accuracy: 78.27%
-Standard Deviation: 3.61%
-Recall: 76.92%
-Specificity: 71.51%
-
-
-Dataset 3 Results:
-
-Naive-Bayes:  
-Accuracy: 69.28%
-Standard Deviation: 3.92%
-Recall: 64.80%
-Specificity: 76.56%
-
-SVM:  
-Accuracy: 71.48%
-Standard Deviation: 2.34%
-Recall: 60.14%
-Specificity: 89.77% 
- 
-XGBoost:
-Accuracy: 67.60%
-Standard Deviation: 4.01%
-Recall: 59.44%
-Specificity: 80.76%
-
+  
+### Dataset 3 Results:  
+  
+Naive-Bayes:    
+Accuracy: 69.28%  
+Standard Deviation: 3.92%  
+Recall: 64.80%  
+Specificity: 76.56%  
+  
+SVM:    
+Accuracy: 71.48%  
+Standard Deviation: 2.34%  
+Recall: 60.14%  
+Specificity: 89.77%   
+   
+XGBoost:  
+Accuracy: 67.60%  
+Standard Deviation: 4.01%  
+Recall: 59.44%  
+Specificity: 80.76%  
+  
 One might conclude that the results highlight the importance of having either a) larger datasets or b) balanced datasets if the dataset is small. We noted earlier that dataset 1 is highly positively skewed, given that 1585 out of 1885 respondents had tried at least one illegal drug in their lifetimes. Dataset 3 on the other hand is negatively skewed, with 579 positives and 1306 negatives. Therefore the models that were trained with dataset 1 ended up doing a poor job of predicting negatives (low specificity) and the models trained with dataset 3 did a poor job of predicting positives (low recall). Models trained on dataset 2 on the other hand did an excellent job all around, which may be due to the fact that the response variable was more balanced.  
 
 The SVM model on dataset 1 was particularly bad as it made almost no negative predictions and therefore only had a specificity of 3.75% on the initial run. Despite this, it still had an accuracy of 82.63% and recall of 98.72%. If specificity was ignored or forgotten, someone might think this is a good model. The decision tree models also performed quite poorly on this dataset, resulting in a cross-validated specificity of approximately 30% or less. Naïve-Bayes was the only model that performed relatively well on dataset 1, with accuracy of 79.55%, recall of 68.61% and specificity of 52.73%. This was still not excellent, but at least it was able to successfully predict half of negative outcomes.  
@@ -879,44 +830,41 @@ As mentioned earlier, some classification models possess the ability to reveal t
 feature_importancesDTC = pd.DataFrame(classifierDTC2.feature_importances_, index = x_train2.columns, columns=['Importance']).sort_values('Importance', ascending=False) 
 print(feature_importancesDTC)
 ```
-Decision Tree:  
-           Importance  
-SS           0.175435  
-Oscore       0.135807  
-Nscore       0.129530  
-Cscore       0.107388  
-Escore       0.103259  
-Education    0.102178  
-Age          0.102141  
-AScore       0.068667  
-Impulsive    0.050702  
-Gender       0.024892  
+Decision Tree - Feature Importance  
+SS        -     0.175435  
+Oscore   -     0.135807  
+Nscore    -   0.129530  
+Cscore    -   0.107388  
+Escore     -  0.103259  
+Education -   0.102178  
+Age       -   0.102141  
+AScore    -   0.068667  
+Impulsive -   0.050702  
+Gender    -   0.024892  
 
-Random Forest:  
-           Importance  
-SS           0.174336  
-Oscore       0.148482  
-Cscore       0.111611  
-Age          0.108487  
-Nscore       0.102254  
-Escore       0.101133  
-AScore       0.091322  
-Education    0.068495  
-Impulsive    0.058337  
-Gender       0.035543  
+Random Forest - Feature Importance  
+SS       -    0.174336  
+Oscore    -   0.148482  
+Cscore    -   0.111611  
+Age       -   0.108487  
+Nscore    -   0.102254  
+Escore    -   0.101133  
+AScore     -  0.091322  
+Education  -  0.068495  
+Impulsive  -  0.058337  
+Gender    -   0.035543  
 
-XGBoost:  
-          Importance  
-Age          0.210477  
-SS           0.184196  
-Gender       0.101149  
-Education    0.091023  
-Oscore       0.090485  
-Cscore       0.068642  
-Nscore       0.068575  
-Escore       0.065901  
-Impulsive    0.060518  
-AScore       0.059034  
+XGBoost - Feature Importance  
+Age      -    0.210477  
+SS        -   0.184196  
+Gender    -   0.101149  
+Education  -  0.091023  
+Oscore    -   0.090485  
+Cscore    -   0.068642  
+Nscore    -   0.068575  
+Escore    -   0.065901  
+Impulsive  -  0.060518  
+AScore     -  0.059034  
 
 
 One outcome that stands out immediately is that SS (sensation seeking) is shown to be the most important feature, beating out all of the Big Five personality traits. It gets first place for both Decision Tree and Random Forest, while taking second place for XGBoost (after age). Impulsivity on the other hand ranks very low for all three models. Taking a closer look at the Big Five, we can see that Openness, Conscientiousness and Neuroticism rank higher than Extraversion and Agreeableness for every model – with Openness always taking the top spot among the five.  

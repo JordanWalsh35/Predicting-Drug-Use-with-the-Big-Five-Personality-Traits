@@ -1,7 +1,7 @@
 # Predicting-Drug-Use-with-the-Big-Five-Personality-Traits
 Using machine learning classification models to predict a person's willingness to try illegal drugs based on quantified scores of their personality traits.
-
-
+  
+  
 # Overview
 
 The objective of this project was to study the relationship between the Big Five personality traits and the use of illegal drugs. This was done by testing the significance of trait differences between users and non-users and by creating several machine learning classification models to test the predictive power of the Big Five traits and some other features. In addition, correlations between the use of different drugs were also examined in order to discover any interesting relationships and test the ‘Gateway drug’ theory. 
@@ -157,8 +157,8 @@ orig_data.head()
 The dataset was then copied so that three distinct scenarios could be studied, based on the type of drug user. In each of these three datasets a new variable was created which will be used as the response variable in the predictive modelling section later on. Given the nature of the answers that the respondents gave for each substance (CL0 to CL6 mentioned earlier, i.e. Never tried, Used in Last Decade etc.), it was determined that this would have to be a binary variable (0 or 1) for classification modelling. 
 The method used for calculating the output variable was therefore the defining feature that separates the datasets. This was done to investigate any possible differences in predictive power of the Big Five traits for those who are more active users and for those who use more dangerous drugs.
 
-The three datasets were created with the following logic and code: 
-1) A participant who has tried at least one illegal drug at any point in their lives. 
+The three datasets were created with the following logic and code:   
+### 1) A participant who has tried at least one illegal drug at any point in their lives.   
 The list of illegal substances used can be seen in the code below. The binary variable (‘Try_Drug’) was set to 1 if a participant answered CL1, CL2, CL3, CL4, CL5 or CL6 for at least one drug in the dataset and was therefore 0 if they answered CL0 for all illegal drugs.
 
 ```python
@@ -254,7 +254,7 @@ The second action that was performed was to create new subsets of each dataset, 
 # Exploratory Data Analysis
 Several aspects of the data were examined before the machine learning models were applied (next section). This section highlights some key insights about the data, including descriptive statistics, checks for normality, t-tests, a graphical representation of the popularity of each substance and correlations between the use of each substance.
 
--	Descriptive Statistics
+### Descriptive Statistics  
 As mentioned previously the overall dataset contains responses from 1885 survey participants. Based on dataset 1 we can see that 84.1% of the participants (1585) have tried at least one illegal drug. This is quite high and may represent a self-selection bias in the people who participated in the survey. Further analysis shows that approximately 15% of participants have tried heroin (280 people) and dataset 3 shows that over 30% of the sample have tried either heroin, meth or crack. 
 
 The mean values and standard deviations for each of the Big Five personality traits were calculated in python and are shown below. These stats are for the entire sample of 1885 participants.
@@ -278,4 +278,25 @@ print("Oscore: {:.2f}".format(orig_data['Oscore'].std()))
 print("Ascore: {:.2f}".format(orig_data['AScore'].std()))
 print("Cscore: {:.2f}".format(orig_data['Cscore'].std()))
 ```
+
+Means:  
+Nscore: 35.92  
+Escore: 39.58  
+Oscore: 45.76  
+Ascore: 42.87  
+Cscore: 41.44  
+
+Standard Deviations:  
+Nscore: 9.14  
+Escore: 6.77  
+Oscore: 6.58  
+Ascore: 6.44  
+Cscore: 6.97  
+
+### Checking for normality  
+In order to examine whether there are significant differences in the five traits between groups of users and non-users we need to perform t-tests. These will show whether the differences between the means are statistically significant. Before performing a t-test we need to assess whether the data follows a normal distribution as this is one of the assumptions of the standard Student T-test.  
+
+Multiple tests were carried out to check for normality. Firstly, some histograms and Q-Q plots were created to make an approximate judgement the normality of the data by eye.  
+
+
 

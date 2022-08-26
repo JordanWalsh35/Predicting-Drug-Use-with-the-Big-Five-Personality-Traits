@@ -42,9 +42,111 @@ data.columns = header_cols
 data.head()
 
 ```
-
+![](Images/data_head.PNG)
 
 # Data Pre-Processing
 The first pre-processing task that was completed was checking for missing values. This was done with the following code which found zero missing values.
 
+```python
+# Check for missing values
+chk = 0
+for head in header_cols:
+    null_val = data[head].isnull()
+    for j in null_val:
+        if j == True:
+            chk = chk + 1
+print(chk)
+
+```
+
+It should be noted that some data pre-processing was already performed by the original author before the dataset was made available for download. This may or may not have included some data cleaning. What is known for sure is that the pre-processing performed by the author did include at least two steps: handling of categorical variables and feature scaling:
+
+
+### 1)	Handling of Categorical Variables:
+There are a number of categorical variables in the dataset, namely: age (range), gender, education, country and ethnicity. These were all given numerical values. This was presumably done in a way that intended to avoid one-hot encoding (creating binary data for each categorical option, i.e. 1 or 0) given the number of possible values for each category. 
+For example age has six levels (possible values), education has nine, country has seven and ethnicity has seven. If these variables were one-hot encoded there would be 29 columns for just four variables. When dealing with categorical variables that have multiple options like this, having this many dummy columns is often avoided as it may impact the results of the study. 
+
+### 2)	Feature Scaling
+It can be seen by looking the dataset above that some sort of feature scaling was also performed on the data. This appears to be a form of standardization scaling as the data is distributed about a mean of approximately zero. This applies to both categorical and numerical data. Therefore, no feature scaling was needed to be done as part of this project in order to facilitate the predictive modelling section later on. 
+
+### Converting Back to Original Data
+The keys were provided by the authors so that the scaled data can be converted back to the original data. This was partially done for visual/aesthetic purposes but mostly because the original data was used to calculate the descriptive statistics for the Big Five traits. This was not a complete necessity but it was preferred to show the descriptive statistics of the Big Five in a form that was consistent with typical scores. The keys were saved in a file called Dictionaries.xlsx. The converted (original) data can be seen below.
+
+```python
+# Dictionaries for categorical variables
+Nscore_xl = pd.read_excel('Dictionaries.xlsx', sheet_name = 'Nscores')
+Nscore_xl = Nscore_xl.iloc[:, 1:]
+Nscore_dict = Nscore_xl.set_index('Score').to_dict()['Value']
+
+Escore_xl = pd.read_excel('Dictionaries.xlsx', sheet_name = 'Escores')
+Escore_xl = Escore_xl.iloc[:, 1:]
+Escore_dict = Escore_xl.set_index('Score').to_dict()['Value']
+
+Oscore_xl = pd.read_excel('Dictionaries.xlsx', sheet_name = 'Oscores')
+Oscore_xl = Oscore_xl.iloc[:, 1:]
+Oscore_dict = Oscore_xl.set_index('Score').to_dict()['Value']
+
+Ascore_xl = pd.read_excel('Dictionaries.xlsx', sheet_name = 'Ascores')
+Ascore_xl = Ascore_xl.iloc[:, 1:]
+Ascore_dict = Ascore_xl.set_index('Score').to_dict()['Value']
+
+Cscore_xl = pd.read_excel('Dictionaries.xlsx', sheet_name = 'Cscores')
+Cscore_xl = Cscore_xl.iloc[:, 1:]
+Cscore_dict = Cscore_xl.set_index('Score').to_dict()['Value']
+
+Age_xl = pd.read_excel('Dictionaries.xlsx', sheet_name = 'Age')
+Age_xl = Age_xl.iloc[:, 1:]
+Age_dict = Age_xl.set_index('Score').to_dict()['Value']
+
+Edu_xl = pd.read_excel('Dictionaries.xlsx', sheet_name = 'Education')
+Edu_xl = Edu_xl.iloc[:, 1:]
+Edu_dict = Edu_xl.set_index('Score').to_dict()['Value']
+
+Country_xl = pd.read_excel('Dictionaries.xlsx', sheet_name = 'Country')
+Country_xl = Country_xl.iloc[:, 1:]
+Country_dict = Country_xl.set_index('Score').to_dict()['Value']
+
+Eth_xl = pd.read_excel('Dictionaries.xlsx', sheet_name = 'Ethnicity')
+Eth_xl = Eth_xl.iloc[:, 1:]
+Eth_dict = Eth_xl.set_index('Score').to_dict()['Value']
+```
+
+```python
+# Convert Scores via Dictionaries to calculate Descriptive Stats
+orig_data = data.copy()
+for i in range(0, len(data)):
+    for keys, values in Nscore_dict.items():
+        if orig_data['Nscore'][i] == values:
+            orig_data['Nscore'].iat[i] = keys
+    for keys, values in Escore_dict.items():
+        if orig_data['Escore'][i] == values:
+            orig_data['Escore'].iat[i] = keys
+    for keys, values in Ascore_dict.items():
+        if orig_data['AScore'][i] == values:
+            orig_data['AScore'].iat[i] = keys
+    for keys, values in Oscore_dict.items():
+        if orig_data['Oscore'][i] == values:
+            orig_data['Oscore'].iat[i] = keys
+    for keys, values in Cscore_dict.items():
+        if orig_data['Cscore'][i] == values:
+            orig_data['Cscore'].iat[i] = keys
+    for keys, values in Age_dict.items():
+        if orig_data['Age'][i] == values:
+            orig_data['Age'].iat[i] = keys
+    for keys, values in Edu_dict.items():
+        if orig_data['Education'][i] == values:
+            orig_data['Education'].iat[i] = keys
+    for keys, values in Country_dict.items():
+        if orig_data['Country'][i] == values:
+            orig_data['Country'].iat[i] = keys
+    for keys, values in Eth_dict.items():
+        if orig_data['Ethnicity'][i] == values:
+            orig_data['Ethnicity'].iat[i] = keys
+    if orig_data['Gender'][i] == 0.48246:
+            orig_data['Gender'].iat[i] = 'F'
+    else:
+         orig_data['Gender'].iat[i] = 'M'
+            
+orig_data.head()
+```
 

@@ -298,5 +298,633 @@ In order to examine whether there are significant differences in the five traits
 
 Multiple tests were carried out to check for normality. Firstly, some histograms and Q-Q plots were created to make an approximate judgement the normality of the data by eye.  
 
+```python
+# Checking Normality with Histogram
+plt.hist(orig_data['Cscore'])
+plt.show()
+
+plt.hist(orig_data['Oscore'])
+plt.show()
+```
+
+![](Images/histograms.PNG)  
 
 
+```python
+# Q-Q Plot
+import statsmodels.api as sm
+import pylab as py 
+
+sm.qqplot(orig_data['Escore'], line='s')
+py.show()
+
+sm.qqplot(orig_data['AScore'], line='s')
+py.show()
+```
+![](Images/QQ_plots.PNG)
+
+The plots indicate some non-normality in the data. This was then followed up by a quantitative Shapiro-Wilk test on each of the five personality trait columns in the overall dataset to determine with more certainty whether the data follows a normal distribution. 
+
+```python
+# Shapiro-Wilk test for normality
+import scipy
+from scipy import stats
+print("P-values:")
+print("N: {:.2E}".format(scipy.stats.shapiro(orig_data['Nscore']).pvalue))
+print("E: {:.2E}".format(scipy.stats.shapiro(orig_data['Escore']).pvalue))
+print("A: {:.2E}".format(scipy.stats.shapiro(orig_data['AScore']).pvalue))
+print("O: {:.2E}".format(scipy.stats.shapiro(orig_data['Oscore']).pvalue))
+print("C: {:.2E}".format(scipy.stats.shapiro(orig_data['Cscore']).pvalue))
+```
+
+P-values:  
+N: 2.09E-08  
+E: 1.10E-07  
+A: 3.85E-08  
+O: 6.76E-11  
+C: 2.19E-12  
+
+The p-values indicate that for each trait we can reject the null hypothesis and conclude that the data is not normally distributed. One final test for excess kurtosis and skewness is shown below:
+
+```python
+# Excess Kurtosis
+print("\nKurtosis:")
+print("Nscore: {:.2f}".format(scipy.stats.kurtosis(orig_data['Nscore'])))
+print("Escore: {:.2f}".format(scipy.stats.kurtosis(orig_data['Escore'])))
+print("Oscore: {:.2f}".format(scipy.stats.kurtosis(orig_data['Oscore'])))
+print("Ascore: {:.2f}".format(scipy.stats.kurtosis(orig_data['AScore'])))
+print("Cscore: {:.2f}".format(scipy.stats.kurtosis(orig_data['Cscore'])))
+
+# Skewness
+print("\nSkewness:")
+print("Nscore: {:.2f}".format(scipy.stats.skew(orig_data['Nscore'])))
+print("Escore: {:.2f}".format(scipy.stats.skew(orig_data['Escore'])))
+print("Oscore: {:.2f}".format(scipy.stats.skew(orig_data['Oscore'])))
+print("Ascore: {:.2f}".format(scipy.stats.skew(orig_data['AScore'])))
+print("Cscore: {:.2f}".format(scipy.stats.skew(orig_data['Cscore'])))
+```
+
+Kurtosis:  
+Nscore: -0.55  
+Escore: 0.06  
+Oscore: -0.28  
+Ascore: 0.13  
+Cscore: -0.17  
+
+Skewness:  
+Nscore: 0.12  
+Escore: -0.27  
+Oscore: -0.30  
+Ascore: -0.27  
+Cscore: -0.39  
+
+These values further demonstrate that the data for all traits has some non-normal skewness and also some excess kurtosis (arguably with the exception of Extraversion). The final conclusion is that the data cannot be said to follow a normal distribution.  
+
+### T-tests  
+Given the skewness of the data it was decided to use the Wilcoxon-Signed-Rank test, which is a non-parametric t-test that can be used for data that doesn’t follow the assumptions of the standard t-test. Wilcoxon tests the significance of the differences between means of two groups. The test was carried out separately for each of our three datasets.   
+
+The means for each dataset and the results of the Wilcoxon t-tests are shown below:  
+
+```python
+# Comparing sample means of drug users and non-users: Dataset 1
+
+print("Means of Non-Users:")
+print("N: {:.2f}".format(Nvr_Tried['Nscore'].mean()))
+print("E: {:.2f}".format(Nvr_Tried['Escore'].mean()))
+print("O: {:.2f}".format(Nvr_Tried['Oscore'].mean()))
+print("A: {:.2f}".format(Nvr_Tried['Ascore'].mean()))
+print("C: {:.2f}".format(Nvr_Tried['Cscore'].mean()))
+
+print("\nMeans of Users:")
+print("N: {:.2f}".format(Tried_Samp['Nscore'].mean()))
+print("E: {:.2f}".format(Tried_Samp['Escore'].mean()))
+print("O: {:.2f}".format(Tried_Samp['Oscore'].mean()))
+print("A: {:.2f}".format(Tried_Samp['Ascore'].mean()))
+print("C: {:.2f}".format(Tried_Samp['Cscore'].mean()))
+```
+
+Means of Non-Users:  
+N: 33.09  
+E: 40.74  
+O: 41.72  
+A: 44.99  
+C: 45.44  
+
+Means of Users:  
+N: 37.11  
+E: 39.42  
+O: 46.92  
+A: 42.16  
+C: 40.35  
+
+```python
+# Wilcoxon Signed Rank test (non-normal data) to determine differences in means: Dataset 1
+
+print("N: {:.3E}".format(stats.wilcoxon(Nvr_Tried['Nscore'], Tried_Samp['Nscore']).pvalue))
+print("E: {:.3E}".format(stats.wilcoxon(Nvr_Tried['Escore'], Tried_Samp['Escore']).pvalue))
+print("A: {:.3E}".format(stats.wilcoxon(Nvr_Tried['Oscore'], Tried_Samp['Oscore']).pvalue))
+print("O: {:.3E}".format(stats.wilcoxon(Nvr_Tried['Ascore'], Tried_Samp['Ascore']).pvalue))
+print("C: {:.3E}".format(stats.wilcoxon(Nvr_Tried['Cscore'], Tried_Samp['Cscore']).pvalue))
+```
+
+P-values:  
+N: 2.270E-08  
+E: 4.427E-02  
+A: 5.752E-19  
+O: 7.628E-07  
+C: 3.169E-17  
+
+```python
+# Comparing sample means of drug users and non-users: Dataset 2
+
+print("Means of Non-Users:")
+print("N: {:.2f}".format(Recent_N['Nscore'].mean()))
+print("E: {:.2f}".format(Recent_N['Escore'].mean()))
+print("O: {:.2f}".format(Recent_N['Oscore'].mean()))
+print("A: {:.2f}".format(Recent_N['Ascore'].mean()))
+print("C: {:.2f}".format(Recent_N['Cscore'].mean()))
+
+print("\nMeans of Users:")
+print("N: {:.2f}".format(Recent_Y_Samp['Nscore'].mean()))
+print("E: {:.2f}".format(Recent_Y_Samp['Escore'].mean()))
+print("O: {:.2f}".format(Recent_Y_Samp['Oscore'].mean()))
+print("A: {:.2f}".format(Recent_Y_Samp['Ascore'].mean()))
+print("C: {:.2f}".format(Recent_Y_Samp['Cscore'].mean()))
+```
+
+Means of Non-Users:  
+N: 33.80  
+E: 40.25  
+O: 42.64  
+A: 44.39  
+C: 44.23  
+  
+Means of Users:  
+N: 37.54  
+E: 38.94  
+O: 47.52  
+A: 42.05  
+C: 39.69  
+
+```python
+# Wilcoxon Signed Rank test (non-normal data) to determine differences in means: Dataset 2
+
+print("N: {:.3E}".format(stats.wilcoxon(Recent_N['Nscore'], Recent_Y_Samp['Nscore']).pvalue))
+print("E: {:.3E}".format(stats.wilcoxon(Recent_N['Escore'], Recent_Y_Samp['Escore']).pvalue))
+print("A: {:.3E}".format(stats.wilcoxon(Recent_N['Oscore'], Recent_Y_Samp['Oscore']).pvalue))
+print("O: {:.3E}".format(stats.wilcoxon(Recent_N['Ascore'], Recent_Y_Samp['Ascore']).pvalue))
+print("C: {:.3E}".format(stats.wilcoxon(Recent_N['Cscore'], Recent_Y_Samp['Cscore']).pvalue))
+```
+
+P-values:  
+N: 2.186E-14  
+E: 4.211E-04  
+A: 1.328E-42  
+O: 5.423E-13  
+C: 5.749E-35  
+
+```python
+# Comparing sample means of drug users and non-users: Dataset 3
+
+print("Means of Non-Users:")
+print("N: {:.2f}".format(Heavy_N_Samp['Nscore'].mean()))
+print("E: {:.2f}".format(Heavy_N_Samp['Escore'].mean()))
+print("O: {:.2f}".format(Heavy_N_Samp['Oscore'].mean()))
+print("A: {:.2f}".format(Heavy_N_Samp['Ascore'].mean()))
+print("C: {:.2f}".format(Heavy_N_Samp['Cscore'].mean()))
+
+print("\nMeans of Users:")
+print("N: {:.2f}".format(Heavy_Y['Nscore'].mean()))
+print("E: {:.2f}".format(Heavy_Y['Escore'].mean()))
+print("O: {:.2f}".format(Heavy_Y['Oscore'].mean()))
+print("A: {:.2f}".format(Heavy_Y['Ascore'].mean()))
+print("C: {:.2f}".format(Heavy_Y['Cscore'].mean()))
+```
+
+Means of Non-Users:  
+N: 35.04  
+E: 40.27  
+O: 44.84  
+A: 43.63  
+C: 42.55  
+  
+Means of Users:  
+N: 38.53  
+E: 38.40  
+O: 47.94  
+A: 41.19  
+C: 39.07  
+
+```python
+# Wilcoxon Signed Rank test (non-normal data) to determine differences in means: Dataset 3
+
+print("N: {:.3E}".format(stats.wilcoxon(Heavy_N_Samp['Nscore'], Heavy_Y['Nscore']).pvalue))
+print("E: {:.3E}".format(stats.wilcoxon(Heavy_N_Samp['Escore'], Heavy_Y['Escore']).pvalue))
+print("A: {:.3E}".format(stats.wilcoxon(Heavy_N_Samp['Oscore'], Heavy_Y['Oscore']).pvalue))
+print("O: {:.3E}".format(stats.wilcoxon(Heavy_N_Samp['Ascore'], Heavy_Y['Ascore']).pvalue))
+print("C: {:.3E}".format(stats.wilcoxon(Heavy_N_Samp['Cscore'], Heavy_Y['Cscore']).pvalue))
+```
+
+P-values:  
+N: 5.479E-11  
+E: 3.469E-06  
+A: 1.777E-15  
+O: 6.027E-10  
+C: 4.328E-17  
+
+
+The results of the t-tests show that group differences for all of the big five traits are statistically significant at all levels and for all three datasets, with the exception of Extraversion in the first dataset which is only significant at the 5% level. These t-tests show that there is a significant difference in each of the traits between groups of drug users and non-users.   
+
+### Popularity of Each Substance  
+The logic of dataset 1 was used to demonstrate the popularity of each substance graphically. Answers of ‘CL0’ were given a 0 and any other answer was given a 1, then the columns were summed to find the total number of users that had tried each substance.  
+
+```python
+# Graphically Show the Number of People that have Tried Each Legal and Illegal Drug/Substance (Dataset 1)
+import pygal
+from pygal.style import DefaultStyle
+
+Graph_data = data.copy()
+Graph_data = Graph_data.iloc[:,13:32]
+Graph_data = Graph_data.drop(columns = ['Semer'])
+for col in Graph_data.columns:
+    for i in range(0, len(Graph_data)):
+        if Graph_data[col][i] == 'CL0':
+            Graph_data[col].iat[i] = 0
+        else:
+            Graph_data[col].iat[i] = 1
+Graph_data = Graph_data.astype(float)
+
+barvalues = []
+barheaders = []
+for col in Graph_data.columns:
+    tot_count = sum(Graph_data[col])
+    barvalues.append((tot_count/1885)*100)
+    barheaders.append(col)
+
+barchart = pygal.Bar(title = "Percentage of People that have Tried Each Substance", style = DefaultStyle, y_title = 'Percent %', width = 900, range = (0,100))
+for i in range(0, len(barvalues)):
+    barchart.add(str(barheaders[i]), [{'value': barvalues[i], 'xlabel': barheaders[i]}])
+barchart.render_to_file('drug_popularity.svg')
+```
+
+![](Images/drug_popularity.svg)
+
+Alcohol was tried by almost every participant, with 98.2% (1851/1885) having tried it. Caffeine and chocolate had similar levels as alcohol. The drugs with the lowest positivity rate were heroin (14.85%) and crack (13.7%), as expected. Pretty much every illegal drug in the dataset had much higher positivity levels than expected, for example amphetamines (48.2%), cocaine (44.9%) and mushrooms (47.9%). It’s probably safe to say that nearly half the population has not tried any of these drugs, so the data proves undoubtedly that there is a bias in the sampling. 
+
+### Correlations  
+The correlations between all of the substances were studied to see if any interesting relationships would be revealed, to find the strongest correlations, their statistical significance and the substances with the most significant correlations. This was done with the following code:
+
+```python
+# Correlations between different drugs (Dataset 1)
+from scipy.stats import pearsonr
+import collections
+
+correlations = Graph_data.copy()
+C = correlations.corr()
+
+sub1 = []
+sub2 = []
+corr_val = []
+pval = []
+
+for i in correlations.columns:
+    for j in correlations.columns:
+        PCC = pearsonr(correlations[i], correlations[j])
+        sub1.append(i)
+        sub2.append(j)
+        corr_val.append(PCC[0])
+        pval.append(PCC[1])
+corr_df = pd.DataFrame().assign(Substance_1 = sub1, Substance_2 = sub2, Correlation_Value = corr_val, P_Value = pval)
+corr_df['Pair'] = corr_df['Substance_1'] + ' - ' + corr_df['Substance_2']
+
+corr_df = corr_df.loc[corr_df['Substance_1'] != corr_df['Substance_2']]
+corr_df = corr_df.sort_values('Correlation_Value', ascending = False)
+corr_df = corr_df.iloc[::2]
+corr_df['Significance Level'] = ''
+for i in range(0, len(corr_df)):
+    if corr_df['P_Value'].iloc[i] < 0.0001:
+        corr_df['Significance Level'].iat[i] = '****'
+    elif corr_df['P_Value'].iloc[i] < 0.001 and corr_df['P_Value'].iloc[i] > 0.0001:
+        corr_df['Significance Level'].iat[i] = '***'
+    elif corr_df['P_Value'].iloc[i] < 0.01 and corr_df['P_Value'].iloc[i] > 0.001:
+        corr_df['Significance Level'].iat[i] = '**'
+    elif corr_df['P_Value'].iloc[i] < 0.05 and corr_df['P_Value'].iloc[i] > 0.01:
+        corr_df['Significance Level'].iat[i] = '*'
+
+Top_corr = corr_df.iloc[0:20, :]
+most_common = []
+for i in range(0, len(Top_corr)):
+    most_common.append(Top_corr['Substance_1'].iloc[i])
+    most_common.append(Top_corr['Substance_2'].iloc[i])
+
+counter = collections.Counter(most_common)
+print(counter.most_common())
+```
+
+The values of the correlation matrix were added to another dataframe so that they could be ordered by the strength of the correlation and their statistical significance. Out of 153 unique correlation pairs, 113 were significant at the 0.01% level, another four were significant at the 0.1% level, seven were significant at the 1% level and eight were significant at the 5% level.  
+
+The strongest correlation was between LSD and mushrooms. This makes sense as they are both psychedelic drugs and are likely used by similar personalities and for similar purposes. Some of the other strongest correlation pairs include Coke-Amphetamine, Ecstasy-Coke, Ecstasy-Amphetamine and Crack-Heroin. Cannabis-Nicotine also showed in the top 10. The fact that many of the pairs make logical sense is reassuring that even though the data may be biased, it seems to be accurate. Ecstasy is involved in many of the top correlation pairs and therefore may be a contender for ‘gateway’ drug status, as the data shows that if individuals are willing to try Ecstasy they are also likely to try other drugs.  
+
+A separate dataframe was created representing a subset of the top X strongest correlations. The frequency of each substance in the top correlation dataframe was counted and displayed. When taking the top 10 or the top 20 pairs, Ecstasy is the most frequent substance in both cases. If we take the top 30 it loses the top spot to Coke and Amphetamines. 
+
+[('Ecstasy', 7), 
+('Mushrooms', 6), 
+('Amphet', 6), 
+('LSD', 4), 
+('Coke', 4), 
+('Cannabis', 4), 
+('Heroin', 2), 
+('Legalh', 2), 
+('Crack', 1), 
+('Nicotine', 1), 
+('Meth', 1), 
+('Ketamine', 1), 
+('Benzos', 1)]  
+
+# Predictive Modelling  
+
+Five different classifications models were used for this section. The goal here was to test the predictive power of the Big Five traits and also the other features in the dataset (impulsivity, sensation seeking, gender, age and education status) in their ability to classify whether an individual will try illegal drugs.  
+
+The five classification models that were used were Naïve-Bayes, Support Vector Machine, Decision Tree, Random Forest and XGBoost. In addition to measuring predictive power, it was also hoped that the three decision-trees based models could reveal the most important features through the ‘feature_importances_’ property. A grid search was also performed on the SVM model with the aim of optimizing the hyperparameters.  
+
+Cross-fold validation was performed for each of the models to give a more complete picture of the performance scores. Three measures were used to measure the performance of each model: accuracy, recall (sensitivity) and specificity. Recall (ability to successfully predict positives) and specificity (ability to successfully predict negatives) were used to avoid falling into the accuracy trap. The results of the project will highlight why this is such an important practice in data science. 
+The code for the five models and cross validation are shown below. The same models were used for all three of our datasets.  
+
+
+```python
+# Modelling - Dataset 1
+inputs = df1.iloc[:, :10]
+output = df1.iloc[:, 29]
+inputs = inputs.astype(float)
+output = output.astype(float)
+
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(inputs, output, test_size=0.25, random_state=0)
+
+from sklearn.metrics import confusion_matrix, accuracy_score, recall_score
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import make_scorer
+scorer = make_scorer(recall_score, pos_label = 0)
+```
+
+```python
+# Naive-Bayes
+from sklearn.naive_bayes import GaussianNB
+classifierNB = GaussianNB()
+classifierNB.fit(x_train, y_train)
+
+y_pred_NB = classifierNB.predict(x_test)
+conf_mat_NB = confusion_matrix(y_test, y_pred_NB)
+print(conf_mat_NB)
+print("Accuracy: {:.2f}%".format(accuracy_score(y_test, y_pred_NB)*100))
+
+# Sensitivty & Specificity
+Tn_NB, Fp_NB, Fn_NB, Tp_NB = confusion_matrix(y_test, y_pred_NB).ravel()
+SensitivityNB = recall_score(y_test, y_pred_NB)*100
+SpecificityNB = (Tn_NB/(Tn_NB + Fp_NB))*100 
+print("Recall: {:.2f}%".format(SensitivityNB))
+print("Specificity: {:.2f}%".format(SpecificityNB))
+```
+
+```python
+# Cross-fold validation NB
+cv_acc_NB = cross_val_score(estimator = classifierNB, X = x_train, y = y_train, cv = 10)
+cv_prec_NB = cross_val_score(classifierNB, x_train, y_train, cv=10, scoring = 'precision')
+cv_recalls_NB = cross_val_score(classifierNB, x_train, y_train, cv=10, scoring = 'recall_macro')
+cv_spec_NB = cross_val_score(classifierNB, x_train, y_train, cv=10, scoring = scorer)
+
+print("Accuracy: {:.2f}%".format(cv_acc_NB.mean()*100))
+print("Standard Deviation: {:.2f}%".format(cv_acc_NB.std()*100))
+print("Recall: {:.2f}%".format(cv_recalls_NB.mean()*100))
+print("Specificity: {:.2f}%".format(cv_spec_NB.mean()*100))
+```
+
+```python
+# SVM
+from sklearn.svm import SVC
+classifierSVM = SVC(kernel = 'rbf', random_state=0)
+classifierSVM.fit(x_train, y_train)
+
+y_predSVM = classifierSVM.predict(x_test)
+conf_matSVM = confusion_matrix(y_test, y_predSVM)
+print(conf_matSVM)
+print(("Accuracy: {:.2f}%".format(accuracy_score(y_test, y_predSVM)*100)))
+
+# Sensitivty & Specificity
+Tn_SVM, Fp_SVM, Fn_SVM, Tp_SVM = confusion_matrix(y_test, y_predSVM).ravel()
+SensitivitySVM = recall_score(y_test, y_predSVM)*100
+SpecificitySVM = (Tn_SVM/(Tn_SVM + Fp_SVM))*100 
+print("Recall: {:.2f}%".format(SensitivitySVM))
+print("Specificity: {:.2f}%".format(SpecificitySVM))
+```
+
+```python
+# Decision Tree
+from sklearn.tree import DecisionTreeClassifier
+classifierDTC = DecisionTreeClassifier(criterion='entropy', random_state=0)
+classifierDTC.fit(x_train, y_train)
+
+y_predDTC = classifierDTC.predict(x_test)
+conf_matDTC = confusion_matrix(y_test, y_predDTC)
+print(conf_matDTC)
+print(("Accuracy: {:.2f}%".format(accuracy_score(y_test, y_predDTC)*100)))
+
+# Sensitivty & Specificity
+Tn_DTC, Fp_DTC, Fn_DTC, Tp_DTC = confusion_matrix(y_test, y_predDTC).ravel()
+SensitivityDTC = recall_score(y_test, y_predDTC)*100
+SpecificityDTC = (Tn_DTC/(Tn_DTC + Fp_DTC))*100 
+print("Recall: {:.2f}%".format(SensitivityDTC))
+print("Specificity: {:.2f}%".format(SpecificityDTC))
+```
+
+```python
+# Random Forest
+from sklearn.ensemble import RandomForestClassifier
+classifierRFC = RandomForestClassifier(n_estimators=10, criterion='entropy', random_state=0)
+classifierRFC.fit(x_train, y_train)
+
+y_predRFC = classifierRFC.predict(x_test)
+conf_matRFC = confusion_matrix(y_test, y_predRFC)
+print(conf_matRFC)
+print(("Accuracy: {:.2f}%".format(accuracy_score(y_test, y_predRFC)*100)))
+
+# Sensitivty & Specificity
+Tn_RFC, Fp_RFC, Fn_RFC, Tp_RFC = confusion_matrix(y_test, y_predRFC).ravel()
+SensitivityRFC = recall_score(y_test, y_predRFC)*100
+SpecificityRFC = (Tn_RFC/(Tn_RFC + Fp_RFC))*100 
+print("Recall: {:.2f}%".format(SensitivityRFC))
+print("Specificity: {:.2f}%".format(SpecificityRFC))
+```
+
+```python
+# XGBboost
+import xgboost as xgb
+classifierXGB = xgb.XGBClassifier()
+classifierXGB.fit(x_train, y_train)
+
+y_predXGB = classifierXGB.predict(x_test)
+conf_matXGB = confusion_matrix(y_test, y_predXGB)
+print(conf_matXGB)
+print(("Accuracy: {:.2f}%".format(accuracy_score(y_test, y_predXGB)*100)))
+
+# Sensitivty & Specificity
+Tn_XGB, Fp_XGB, Fn_XGB, Tp_XGB = confusion_matrix(y_test, y_predXGB).ravel()
+SensitivityXGB = recall_score(y_test, y_predXGB)*100
+SpecificityXGB = (Tn_XGB/(Tn_XGB + Fp_XGB))*100 
+print("Recall: {:.2f}%".format(SensitivityXGB))
+print("Specificity: {:.2f}%".format(SpecificityXGB))
+```
+
+The results of the predictive modelling were vastly different depending on the dataset that was used. Although the accuracy scores were high for almost every model (approximately for 80%), the models had very low specificity rates for dataset 1 and very low recall rates for dataset 3. All of the models on dataset 2 performed well on all three measures. 
+
+Dataset 1 Results:
+
+Naive-Bayes:  
+Accuracy: 79.55%  
+Standard Deviation: 3.15%  
+Recall: 68.61%  
+Specificity: 52.73%  
+
+SVM:  
+Accuracy: 84.57%  
+Standard Deviation: 0.51%  
+Recall: 51.94%  
+Specificity: 4.55%  
+
+Decision Tree:
+Accuracy: 75.72%  
+Standard Deviation: 3.58%  
+Recall: 57.26%  
+Specificity: 30.45%  
+
+Random Forest:  
+Accuracy: 83.23%  
+Standard Deviation: 3.07%  
+Recall: 59.67%  
+Specificity: 25.45%  
+
+XGBoost:
+Accuracy: 82.24%  
+Standard Deviation: 2.25%  
+Recall: 59.08%  
+Specificity: 25.45%  
+
+
+Dataset 2 Results:
+
+Naive-Bayes:  
+Accuracy: 78.56%
+Standard Deviation: 2.69%
+Recall: 77.82%
+Specificity: 74.91% 
+
+SVM:  
+ccuracy: 80.96%
+Standard Deviation: 3.10%
+Recall: 79.94%
+Specificity: 75.85% 
+
+Decision Tree:
+Accuracy: 72.04%
+Standard Deviation: 4.58%
+Recall: 70.16%
+Specificity: 62.64%  
+
+Random Forest:  
+Accuracy: 77.56%
+Standard Deviation: 4.28%
+Recall: 76.92%
+Specificity: 74.34%  
+
+XGBoost:
+Accuracy: 78.27%
+Standard Deviation: 3.61%
+Recall: 76.92%
+Specificity: 71.51%
+
+
+Dataset 3 Results:
+
+Naive-Bayes:  
+Accuracy: 69.28%
+Standard Deviation: 3.92%
+Recall: 64.80%
+Specificity: 76.56%
+
+SVM:  
+Accuracy: 71.48%
+Standard Deviation: 2.34%
+Recall: 60.14%
+Specificity: 89.77% 
+ 
+XGBoost:
+Accuracy: 67.60%
+Standard Deviation: 4.01%
+Recall: 59.44%
+Specificity: 80.76%
+
+One might conclude that the results highlight the importance of having either a) larger datasets or b) balanced datasets if the dataset is small. We noted earlier that dataset 1 is highly positively skewed, given that 1585 out of 1885 respondents had tried at least one illegal drug in their lifetimes. Dataset 3 on the other hand is negatively skewed, with 579 positives and 1306 negatives. Therefore the models that were trained with dataset 1 ended up doing a poor job of predicting negatives (low specificity) and the models trained with dataset 3 did a poor job of predicting positives (low recall). Models trained on dataset 2 on the other hand did an excellent job all around, which may be due to the fact that the response variable was more balanced.  
+
+The SVM model on dataset 1 was particularly bad as it made almost no negative predictions and therefore only had a specificity of 3.75% on the initial run. Despite this, it still had an accuracy of 82.63% and recall of 98.72%. If specificity was ignored or forgotten, someone might think this is a good model. The decision tree models also performed quite poorly on this dataset, resulting in a cross-validated specificity of approximately 30% or less. Naïve-Bayes was the only model that performed relatively well on dataset 1, with accuracy of 79.55%, recall of 68.61% and specificity of 52.73%. This was still not excellent, but at least it was able to successfully predict half of negative outcomes.  
+
+All models performed relatively well on dataset 2; with high accuracies, recalls and specificities. Interestingly, the SVM model was the best performing model for this dataset, with Random Forest a close second. SVM returned a cross-validated accuracy of 80.96%, recall of 79.94 and specificity of 75.85%. This was after the grid search was used to find optimum values for C and gamma and the model was ran again. Random forest resulted in accuracy of 77.56%, recall of 76.92% and specificity of 74.34%.   
+
+The performance for dataset 3 was not as poor as for dataset 1, but recall scores were typically around 60% which underperformed the models on dataset 2. Overall accuracy was also around 70% or less for all dataset 3 models, which shows room for improvement.
+
+### Feature importance  
+
+As mentioned earlier, some classification models possess the ability to reveal the  input features that were most influential in predicting the results. This was done on three dataset 2 models, given the fact that the models on this dataset were the highest performers. The models were Decision Tree, Random Forest and XGBoost.  
+
+```python
+feature_importancesDTC = pd.DataFrame(classifierDTC2.feature_importances_, index = x_train2.columns, columns=['Importance']).sort_values('Importance', ascending=False) 
+print(feature_importancesDTC)
+```
+Decision Tree:  
+           Importance  
+SS           0.175435  
+Oscore       0.135807  
+Nscore       0.129530  
+Cscore       0.107388  
+Escore       0.103259  
+Education    0.102178  
+Age          0.102141  
+AScore       0.068667  
+Impulsive    0.050702  
+Gender       0.024892  
+
+Random Forest:  
+           Importance  
+SS           0.174336  
+Oscore       0.148482  
+Cscore       0.111611  
+Age          0.108487  
+Nscore       0.102254  
+Escore       0.101133  
+AScore       0.091322  
+Education    0.068495  
+Impulsive    0.058337  
+Gender       0.035543  
+
+XGBoost:  
+          Importance  
+Age          0.210477  
+SS           0.184196  
+Gender       0.101149  
+Education    0.091023  
+Oscore       0.090485  
+Cscore       0.068642  
+Nscore       0.068575  
+Escore       0.065901  
+Impulsive    0.060518  
+AScore       0.059034  
+
+
+One outcome that stands out immediately is that SS (sensation seeking) is shown to be the most important feature, beating out all of the Big Five personality traits. It gets first place for both Decision Tree and Random Forest, while taking second place for XGBoost (after age). Impulsivity on the other hand ranks very low for all three models. Taking a closer look at the Big Five, we can see that Openness, Conscientiousness and Neuroticism rank higher than Extraversion and Agreeableness for every model – with Openness always taking the top spot among the five.  
+
+These results all make sense given what we know about the five traits. We would expect drug users to have high Openness, higher Neuroticism and lower Conscientiousness. This is because high Openness is defined by a willingness to try new experiences, low Conscientiousness translates to less thoughtfulness and higher Neuroticism means the individual experiences more negative emotions.
+  
+  
+# Conclusions  
+- T-tests show that differences in mean values for each of the Big Five personality traits are significant when comparing drug users to non-users. 
+- Drug users consistently have higher Openness, higher Neuroticism and lower Conscientiousness.  
+- The Big Five traits and other factors such as sensation seeking, age and education status are all important features for predicting whether someone will be willing to try illegal drugs.

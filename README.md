@@ -11,14 +11,14 @@ The objective of this project was to study the relationship between the Big Five
 
 The Big Five personality trait model was initially developed in 1949 by D. W. Fiske and has grown in popularity over time. The model breaks personality down into five character traits: Openness, Conscientiousness, Extraversion, Agreeableness, and Neuroticism – often abbreviated as OCEAN. The Big Five model has been studied extensively in relation to its predictive power (successfully predicts outcomes relating to personal, interpersonal, social, health etc.), cultural differences, gender differences and personality disorders. 
 
-Openness describes a person’s willingness to try new experiences, their intellectually curiosity, openness to emotion and creativity. An individual who has high openness is also more likely to engage in risky behaviour. Conscientiousness is represented by high levels of thoughtfulness, impulse control and organization. Extraversion is displayed by those who enjoy interacting with other people, are full of energy, talkative and assertive. Agreeableness reflects an individual’s concern for social harmony, optimistic thinking and their willingness to compromise their own interests for those of others. Neuroticism is associated with emotional instability and those who are high in this trait often experience high levels of sadness, moodiness, anxiety and any other negative feelings. 
+Openness describes a person’s willingness to try new experiences, their intellectual curiosity, openness to emotion and creativity. An individual who has high openness is also more likely to engage in risky behaviour. Conscientiousness is represented by high levels of thoughtfulness, impulse control and organization. Extraversion is displayed by those who enjoy interacting with other people, are full of energy, talkative and assertive. Agreeableness reflects an individual’s concern for social harmony, optimistic thinking and their willingness to compromise their own interests for those of others. Neuroticism is associated with emotional instability and those who are high in this trait often experience high levels of sadness, moodiness, anxiety and any other negative feelings. 
 
 
 # Data
 
-The dataset was downloaded from the UCI (University of California Irvine) machine learning repository (link here). The data was recorded for 1885 individuals who responded to online surveys. The test for the OCEAN model involves answering a series of questions (typically 40-60 questions) using a scale from 1-5 (1 representing ‘strongly disagree’ and 5 representing strongly agree). The answers are then used to calculate an unitless score for each personality trait. 
+The dataset was downloaded from the UCI (University of California Irvine) machine learning repository (link [here](https://archive.ics.uci.edu/ml/datasets/Drug+consumption+%28quantified%29)). The data was recorded for 1885 individuals who responded to online surveys. The test for the OCEAN model involves answering a series of questions (typically 40-60 questions) using a scale from 1-5 (1 representing ‘strongly disagree’ and 5 representing strongly agree). The answers are then used to calculate an unitless score for each personality trait. 
 
-In addition to scores for the Big Five personality traits, the data also contained values for age (ranged values, e.g. 18-24), highest educational status, gender, country, ethnicity and two other personality measures labelled as ‘Impulsivity’ and ‘Sensation Seeking’. There are also an additional 18 columns, one for each of the various legal and illegal substances where participants gave one of the following answers: CL0 = Never Used, CL1 = Used over a Decade Ago, CL2 = Used in Last Decade, CL3 = Used in Last Year, CL4 =  Used in Last Month, CL5 = Used in Last Week, CL6 = Used in Last Day.
+In addition to scores for the Big Five personality traits, the data also contains values for age (ranged values, e.g. 18-24), highest educational status, gender, country, ethnicity and two other personality measures labelled as ‘Impulsivity’ and ‘Sensation Seeking’. There are also an additional 18 columns, one for each of the various legal and illegal substances where participants gave one of the following answers: CL0 = Never Used, CL1 = Used over a Decade Ago, CL2 = Used in Last Decade, CL3 = Used in Last Year, CL4 =  Used in Last Month, CL5 = Used in Last Week, CL6 = Used in Last Day.
 
 These substances were as follows (ordered): alcohol, amphetamines, amyl nitrate, benzodiazepines, caffeine, cannabis, chocolate, cocaine, crack, ecstasy, heroin, ketamine, legal highs, LSD, Methamphetamine, mushrooms, nicotine and volatile substance abuse. 
 
@@ -191,7 +191,7 @@ Nvr_Tried = Nvr_Tried.loc[Nvr_Tried['Try_Drug'] == 0]
 ```
 
 ### 2) A participant who has used any illegal drug in the past year. 
-This dataset was for more recent (active) users and also has the benefit of being more balanced. Dataset 1 had 1585 positives (1) and only 300 negatives (0). The benefit of having a more balanced dataset will be seen in the modelling section later on. This dataset on the other hand has 1174 positives and 711 negatives.
+This dataset was for more recent (active) users and also has the benefit of being more balanced. Dataset 1 had 1585 positives (value of 1) and only 300 negatives (value of 0). The benefit of having a more balanced dataset will be seen in the modelling section later on. This dataset on the other hand has 1174 positives and 711 negatives.
 
 ```python
 # Dataset 2: Used illegal drugs in past year
@@ -221,7 +221,7 @@ Recent_N = Recent_N.loc[Recent_N['Try_Drug'] == 0]
 ```
 
 ### 3) A participant who has tried ‘hard’ drugs (heroin, crack, meth) at least once in their lives. 
-The final dataset was for participants who engaged in very risky behaviour. While many drugs in this study can be viewed as party drugs that are often used infrequently – heroin, crack and methamphetamine are extremely addictive and dangerous substances. The dataset has 579 positives and 1306 negatives. 
+The final dataset was for participants who engaged in very risky behaviour. While many drugs in this study can be viewed as party drugs that are used infrequently – heroin, crack and methamphetamine are extremely addictive and dangerous substances. The dataset has 579 positives and 1306 negatives. 
 
 ```python
 # Dataset 3: Tried hard drugs (heroin, crack or meth) at least once
@@ -378,7 +378,7 @@ Oscore: -0.30
 Ascore: -0.27  
 Cscore: -0.39  
 
-These values further demonstrate that the data for all traits has some non-normal skewness and also some excess kurtosis (arguably with the exception of Extraversion). The final conclusion is that the data cannot be said to follow a normal distribution.  
+These values further demonstrate that the data for all traits has some non-normal skewness and also some excess kurtosis (arguably with the exception of Extraversion kurtosis). The final conclusion is that the data cannot be said to follow a normal distribution.  
 
 ### T-tests  
 Given the skewness of the data it was decided to use the Wilcoxon-Signed-Rank test, which is a non-parametric t-test that can be used for data that doesn’t follow the assumptions of the standard t-test. Wilcoxon tests the significance of the differences between means of two groups. The test was carried out separately for each of our three datasets.   
@@ -574,9 +574,9 @@ print(counter.most_common())
 
 The values of the correlation matrix were added to another dataframe so that they could be ordered by the strength of the correlation and their statistical significance. Out of 153 unique correlation pairs, 113 were significant at the 0.01% level, another four were significant at the 0.1% level, seven were significant at the 1% level and eight were significant at the 5% level.  
 
-The strongest correlation was between LSD and mushrooms. This makes sense as they are both psychedelic drugs and are likely used by similar personalities and for similar purposes. Some of the other strongest correlation pairs include Coke-Amphetamine, Ecstasy-Coke, Ecstasy-Amphetamine and Crack-Heroin. Cannabis-Nicotine also showed in the top 10. The fact that many of the pairs make logical sense is reassuring that even though the data may be biased, it seems to be accurate. Ecstasy is involved in many of the top correlation pairs and therefore may be a contender for ‘gateway’ drug status, as the data shows that if individuals are willing to try Ecstasy they are also likely to try other drugs.  
+The strongest correlation was between LSD and mushrooms which is interesting. The pair between LSD and mushrooms at least makes sense as they are both psychedelic drugs and are likely used by similar personalities and for similar purposes. Some of the other strongest correlation pairs include Coke-Amphetamine, Ecstasy-Coke, Ecstasy-Amphetamine and Crack-Heroin. Cannabis-Nicotine also showed in the top 10. The fact that many of the pairs make logical sense is reassuring that even though the data may be biased, it seems to be accurate. Ecstasy is involved in many of the top correlation pairs and therefore may be a contender for ‘gateway’ drug status, as the data shows that if individuals are willing to try Ecstasy they are also likely to try other drugs.  
 
-A separate dataframe was created representing a subset of the top X strongest correlations. The frequency of each substance in the top correlation dataframe was counted and displayed. When taking the top 10 or the top 20 pairs, Ecstasy is the most frequent substance in both cases. If we take the top 30 it loses the top spot to Coke and Amphetamines. 
+A separate dataframe was created representing a subset of the top X strongest correlations. The frequency of each substance in the top correlation dataframe was counted and displayed. When taking the top 10 or the top 20 pairs, Ecstasy is the most frequent substance in both cases. If we take the top 30 it loses the top spot to Coke and Amphetamines. See below the result for counting the top 20 pairs:
 
 [('Ecstasy', 7),   
 ('Mushrooms', 6),   
@@ -596,10 +596,10 @@ A separate dataframe was created representing a subset of the top X strongest co
 
 Five different classifications models were used for this section. The goal here was to test the predictive power of the Big Five traits and also the other features in the dataset (impulsivity, sensation seeking, gender, age and education status) in their ability to classify whether an individual will try illegal drugs.  
 
-The five classification models that were used were Naïve-Bayes, Support Vector Machine, Decision Tree, Random Forest and XGBoost. In addition to measuring predictive power, it was also hoped that the three decision-trees based models could reveal the most important features through the ‘feature_importances_’ property. A grid search was also performed on the SVM model with the aim of optimizing the hyperparameters.  
+The five classification models that were used were Naïve-Bayes, Support Vector Machine, Decision Tree, Random Forest and XGBoost. In addition to measuring predictive power, it was also hoped that the three decision-tree based models could reveal the most important features through the ‘feature_importances_’ property. A grid search was also performed on the SVM model with the aim of optimizing the hyperparameters.  
 
 Cross-fold validation was performed for each of the models to give a more complete picture of the performance scores. Three measures were used to measure the performance of each model: accuracy, recall (sensitivity) and specificity. Recall (ability to successfully predict positives) and specificity (ability to successfully predict negatives) were used to avoid falling into the accuracy trap. The results of the project will highlight why this is such an important practice in data science. 
-The code for the five models and cross validation are shown below. The same models were used for all three of our datasets.  
+The code for the five models and an example of cross validation and grid search are shown below. The same model code was used for all three of our datasets.  
 
 
 ```python
@@ -670,6 +670,21 @@ print("Specificity: {:.2f}%".format(SpecificitySVM))
 ```
 
 ```python
+from sklearn.model_selection import GridSearchCV
+parameters2 = [{'C':[0.1, 1, 10, 100], 'kernel':['linear']},
+               {'C':[0.1, 1, 10, 100, 1000, 10000], 'kernel':['rbf'], 'gamma':[0.0001, 0.001, 0.01, 0.1]},
+               {'C':[0.1, 1, 10, 100], 'kernel':['poly'], 'degree':[2, 3, 4]},
+               {'C':[0.1, 1, 10, 100], 'kernel':['sigmoid'], 'gamma':[0.001, 0.01, 0.1]}]
+gridsearch2 = GridSearchCV(estimator=classifierSVM2, param_grid=parameters2, scoring= scorer, cv=10, n_jobs=-1)
+gridsearch2.fit(x_train2, y_train2)
+best_Acc2 = gridsearch2.best_score_
+best_parameters2 = gridsearch2.best_params_
+print("Best Accuracy: {:.2f}%".format(best_Acc2*100))
+print("Best Parameters:", best_parameters2)
+```
+Best Parameters: {'C': 1000, 'gamma': 0.001, 'kernel': 'rbf'}  
+
+```python
 # Decision Tree
 from sklearn.tree import DecisionTreeClassifier
 classifierDTC = DecisionTreeClassifier(criterion='entropy', random_state=0)
@@ -726,7 +741,7 @@ print("Recall: {:.2f}%".format(SensitivityXGB))
 print("Specificity: {:.2f}%".format(SpecificityXGB))
 ```
 
-The results of the predictive modelling were vastly different depending on the dataset that was used. Although the accuracy scores were high for almost every model (approximately for 80%), the models had very low specificity rates for dataset 1 and very low recall rates for dataset 3. All of the models on dataset 2 performed well on all three measures. 
+The results of the predictive modelling were vastly different depending on the dataset that was used. Although the accuracy scores were high for almost every model (approximately 80%), the models had very low specificity rates for dataset 1 and very low recall rates for dataset 3. All of the models on dataset 2 performed well on all three measures. 
 
 ### Dataset 1 Results:
 
@@ -816,7 +831,7 @@ Specificity: 80.76%
   
 One might conclude that the results highlight the importance of having either a) larger datasets or b) balanced datasets if the dataset is small. We noted earlier that dataset 1 is highly positively skewed, given that 1585 out of 1885 respondents had tried at least one illegal drug in their lifetimes. Dataset 3 on the other hand is negatively skewed, with 579 positives and 1306 negatives. Therefore the models that were trained with dataset 1 ended up doing a poor job of predicting negatives (low specificity) and the models trained with dataset 3 did a poor job of predicting positives (low recall). Models trained on dataset 2 on the other hand did an excellent job all around, which may be due to the fact that the response variable was more balanced.  
 
-The SVM model on dataset 1 was particularly bad as it made almost no negative predictions and therefore only had a specificity of 3.75% on the initial run. Despite this, it still had an accuracy of 82.63% and recall of 98.72%. If specificity was ignored or forgotten, someone might think this is a good model. The decision tree models also performed quite poorly on this dataset, resulting in a cross-validated specificity of approximately 30% or less. Naïve-Bayes was the only model that performed relatively well on dataset 1, with accuracy of 79.55%, recall of 68.61% and specificity of 52.73%. This was still not excellent, but at least it was able to successfully predict half of negative outcomes.  
+The SVM model on dataset 1 was particularly bad as it made almost no negative predictions and therefore only had a specificity of 3.75% on the initial run. Despite this, it still had an accuracy of 82.63% and recall of 98.72%. If specificity was ignored or forgotten, someone might actually think that this is a good model - which again highlights the importance of using many performance measures and not just looking at accuracy alone. The decision tree models also performed quite poorly on this dataset, resulting in a cross-validated specificity of approximately 30% or less. Naïve-Bayes was the only model that performed relatively well on dataset 1, with accuracy of 79.55%, recall of 68.61% and specificity of 52.73%. This was still not excellent, but at least it was able to successfully predict half of negative outcomes.  
 
 All models performed relatively well on dataset 2; with high accuracies, recalls and specificities. Interestingly, the SVM model was the best performing model for this dataset, with Random Forest a close second. SVM returned a cross-validated accuracy of 80.96%, recall of 79.94 and specificity of 75.85%. This was after the grid search was used to find optimum values for C and gamma and the model was ran again. Random forest resulted in accuracy of 77.56%, recall of 76.92% and specificity of 74.34%.   
 
@@ -869,7 +884,9 @@ AScore     -  0.059034
 
 One outcome that stands out immediately is that SS (sensation seeking) is shown to be the most important feature, beating out all of the Big Five personality traits. It gets first place for both Decision Tree and Random Forest, while taking second place for XGBoost (after age). Impulsivity on the other hand ranks very low for all three models. Taking a closer look at the Big Five, we can see that Openness, Conscientiousness and Neuroticism rank higher than Extraversion and Agreeableness for every model – with Openness always taking the top spot among the five.  
 
-These results all make sense given what we know about the five traits. We would expect drug users to have high Openness, higher Neuroticism and lower Conscientiousness. This is because high Openness is defined by a willingness to try new experiences, low Conscientiousness translates to less thoughtfulness and higher Neuroticism means the individual experiences more negative emotions.
+These results all make sense given what we know about the five traits. We would expect drug users to have high Openness, higher Neuroticism and lower Conscientiousness. This is because high Openness is defined by a willingness to try new experiences, low Conscientiousness translates to less thoughtfulness and higher Neuroticism means the individual experiences more negative emotions.  
+
+Therefore, the results of our feature-importance analysis are in agreement with our results from the t-test section earlier, which showed that in all three datasets drug users had higher openness, lower conscientiousness and higher neuroticism.  
   
   
 # Conclusions  

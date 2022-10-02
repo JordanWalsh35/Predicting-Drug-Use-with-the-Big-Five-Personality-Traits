@@ -287,21 +287,17 @@ print("Oscore: {:.2f}".format(orig_data['Oscore'].std()))
 print("Ascore: {:.2f}".format(orig_data['AScore'].std()))
 print("Cscore: {:.2f}".format(orig_data['Cscore'].std()))
 ```
-
-Means:  
-Nscore: 35.92  
-Escore: 39.58  
-Oscore: 45.76  
-Ascore: 42.87  
-Cscore: 41.44  
-
-Standard Deviations:  
-Nscore: 9.14  
-Escore: 6.77  
-Oscore: 6.58  
-Ascore: 6.44  
-Cscore: 6.97  
 <br/>
+
+
+| Scores | Means | Std. Dev |
+|--------|-------|----------|
+| Nscore | 35.92 |    9.14  |
+| Escore | 39.58 |    6.77  |
+| Oscore | 45.76 |    6.58  |
+| Ascore | 42.87 |    6.44  |
+| Cscore | 41.44 |    6.97  |
+
 
 ### Checking for normality  
 <p align="justify">In order to examine whether there are significant differences in the five traits between groups of users and non-users we need to perform t-tests. These will show whether the differences between the means are statistically significant. Before performing a t-test we need to assess whether the data follows a normal distribution as this is one of the assumptions of the standard Student T-test.</p>  
@@ -347,12 +343,13 @@ print("O: {:.2E}".format(scipy.stats.shapiro(orig_data['Oscore']).pvalue))
 print("C: {:.2E}".format(scipy.stats.shapiro(orig_data['Cscore']).pvalue))
 ```
 
-P-values:  
-N: 2.09E-08  
-E: 1.10E-07  
-A: 3.85E-08  
-O: 6.76E-11  
-C: 2.19E-12  
+|   P-values  |
+|-------------|
+| N: 2.09E-08 | 
+| E: 1.10E-07 | 
+| A: 3.85E-08 | 
+| O: 6.76E-11 | 
+| C: 2.19E-12 | 
 
 <p align="justify">The p-values indicate that for each trait we can reject the null hypothesis and conclude that the data is not normally distributed. One final test for excess kurtosis and skewness is shown below:</p>
 
@@ -374,19 +371,14 @@ print("Ascore: {:.2f}".format(scipy.stats.skew(orig_data['AScore'])))
 print("Cscore: {:.2f}".format(scipy.stats.skew(orig_data['Cscore'])))
 ```
 
-Kurtosis:  
-Nscore: -0.55  
-Escore: 0.06  
-Oscore: -0.28  
-Ascore: 0.13  
-Cscore: -0.17  
+|  Scores | Kurtosis | Skewness |
+|---------|:--------:|:--------:|
+| Nscore  |-0.55     |0.12      |
+| Escore  |0.06      |-0.27     |
+| Oscore  |-0.28     |-0.30     |
+| Ascore  |0.13      |-0.27     |
+| Cscore  |-0.17     |-0.39     |
 
-Skewness:  
-Nscore: 0.12  
-Escore: -0.27  
-Oscore: -0.30  
-Ascore: -0.27  
-Cscore: -0.39  
 
 <p align="justify">These values further demonstrate that the data for all traits has some non-normal skewness and also some excess kurtosis (arguably with the exception of Extraversion kurtosis). The final conclusion is that the data cannot be said to follow a normal distribution.</p>  
 <br/>
@@ -395,8 +387,7 @@ Cscore: -0.39
 <p align="justify">Given the skewness of the data it was decided to use the Wilcoxon-Signed-Rank test, which is a non-parametric t-test that can be used for data that doesn’t follow the assumptions of the standard t-test. Wilcoxon tests the significance of the differences between means of two groups. The test was carried out separately for each of our three datasets.</p>   
 
 The means for each dataset and the results of the Wilcoxon t-tests are shown below:  
-  
-### Dataset 1:  
+   
 ```python
 # Comparing sample means of drug users and non-users: Dataset 1
 
@@ -415,20 +406,6 @@ print("A: {:.2f}".format(Tried_Samp['Ascore'].mean()))
 print("C: {:.2f}".format(Tried_Samp['Cscore'].mean()))
 ```
 
-Means of Non-Users:  
-N: 33.09  
-E: 40.74  
-O: 41.72  
-A: 44.99  
-C: 45.44  
-
-Means of Users:  
-N: 37.11  
-E: 39.42  
-O: 46.92  
-A: 42.16  
-C: 40.35  
-
 ```python
 # Wilcoxon Signed Rank test (non-normal data) to determine differences in means: Dataset 1
 
@@ -438,64 +415,39 @@ print("A: {:.3E}".format(stats.wilcoxon(Nvr_Tried['Oscore'], Tried_Samp['Oscore'
 print("O: {:.3E}".format(stats.wilcoxon(Nvr_Tried['Ascore'], Tried_Samp['Ascore']).pvalue))
 print("C: {:.3E}".format(stats.wilcoxon(Nvr_Tried['Cscore'], Tried_Samp['Cscore']).pvalue))
 ```
+### Dataset 1: 
 
-P-values:  
-N: 2.270E-08  
-E: 4.427E-02  
-A: 5.752E-19  
-O: 7.628E-07  
-C: 3.169E-17  
+| Score | Means (Non-Users) | Means (Users) | T-test (p-value) |
+|:-----:|:-----------------:|:-------------:|:----------------:|
+|   N   |33.09              |37.11          |2.270E-08         |
+|   E   |40.74              |39.42          |4.427E-02         |
+|   O   |41.72              |46.92          |5.752E-19         |
+|   A   |44.99              |42.16          |7.628E-07         |
+|   C   |45.44              |40.35          |3.169E-17         |
 <br/>
 
 ### Dataset 2:   
 
-Means of Non-Users:  
-N: 33.80  
-E: 40.25  
-O: 42.64  
-A: 44.39  
-C: 44.23  
-  
-Means of Users:  
-N: 37.54  
-E: 38.94  
-O: 47.52  
-A: 42.05  
-C: 39.69  
+| Score | Means (Non-Users) | Means (Users) | T-test (p-value) |
+|:-----:|:-----------------:|:-------------:|:----------------:|
+|   N   |33.80               |37.54         |2.186E-14         |
+|   E   |40.25               |38.94         |4.211E-04         |
+|   O   |42.64               |47.52         |1.328E-42         |
+|   A   |44.39               |42.05         |5.423E-13         |
+|   C   |44.23               |39.69         |5.749E-35         |
 
-T-test:  
-P-values:  
-N: 2.186E-14  
-E: 4.211E-04  
-A: 1.328E-42  
-O: 5.423E-13  
-C: 5.749E-35  
 <br/>
 
 ### Dataset 3:  
 
-Means of Non-Users:  
-N: 35.04  
-E: 40.27  
-O: 44.84  
-A: 43.63  
-C: 42.55  
+| Score | Means (Non-Users) | Means (Users) | T-test (p-value) |
+|:-----:|:-----------------:|:-------------:|:----------------:|
+|   N   |35.04               |38.53         |5.479E-11         |
+|   E   |40.27               |38.40         |3.469E-06         |
+|   O   |44.84               |47.94         |1.777E-15         |
+|   A   |43.63               |41.19         |6.027E-10         |
+|   C   |42.55               |39.07         |4.328E-17         |
   
-Means of Users:  
-N: 38.53  
-E: 38.40  
-O: 47.94  
-A: 41.19  
-C: 39.07  
-
-T-test:  
-P-values:  
-N: 5.479E-11  
-E: 3.469E-06  
-A: 1.777E-15  
-O: 6.027E-10  
-C: 4.328E-17  
-
 
 <p align="justify">The results of the t-tests show that group differences for all of the big five traits are statistically significant at all levels and for all three datasets, with the exception of Extraversion in the first dataset which is only significant at the 5% level. These t-tests show that there is a significant difference in each of the traits between groups of drug users and non-users.</p>   
 <br/>
@@ -593,19 +545,21 @@ print(counter.most_common())
 
 <p align="justify">A separate dataframe was created representing a subset of the top X strongest correlations. The frequency of each substance in the top correlation dataframe was counted and displayed. When taking the top 10 or the top 20 pairs, Ecstasy is the most frequent substance in both cases. If we take the top 30 it loses the top spot to Coke and Amphetamines. See below the result for counting the top 20 pairs:</p>
 
-[('Ecstasy', 7),   
-('Mushrooms', 6),   
-('Amphet', 6),   
-('LSD', 4),   
-('Coke', 4),   
-('Cannabis', 4),   
-('Heroin', 2),   
-('Legalh', 2),   
-('Crack', 1),   
-('Nicotine', 1),   
-('Meth', 1),   
-('Ketamine', 1),   
-('Benzos', 1)]    
+|  Drug      | # of Correlations |
+|:----------:|:-----------------:|
+| Ecstasy    |7                  |
+| Mushrooms  |6                  |   
+| Amphet     |6                  |   
+| LSD        |4                  |  
+| Coke       |4                  |   
+| Cannabis   |4                  |   
+| Heroin     |2                  |   
+| Legalh     |2                  |   
+| Crack      |1                  |   
+| Nicotine   |1                  |   
+| Meth       |1                  |   
+| Ketamine   |1                  |   
+| Benzos     |1                  |   
 <br/>
 <br/>
 

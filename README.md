@@ -643,16 +643,16 @@ print("Specificity: {:.2f}%".format(SpecificitySVM))
 
 ```python
 from sklearn.model_selection import GridSearchCV
-parameters2 = [{'C':[0.1, 1, 10, 100], 'kernel':['linear']},
+parameters = [{'C':[0.1, 1, 10, 100], 'kernel':['linear']},
                {'C':[0.1, 1, 10, 100, 1000, 10000], 'kernel':['rbf'], 'gamma':[0.0001, 0.001, 0.01, 0.1]},
                {'C':[0.1, 1, 10, 100], 'kernel':['poly'], 'degree':[2, 3, 4]},
                {'C':[0.1, 1, 10, 100], 'kernel':['sigmoid'], 'gamma':[0.001, 0.01, 0.1]}]
-gridsearch2 = GridSearchCV(estimator=classifierSVM2, param_grid=parameters2, scoring= scorer, cv=10, n_jobs=-1)
-gridsearch2.fit(x_train2, y_train2)
-best_Acc2 = gridsearch2.best_score_
-best_parameters2 = gridsearch2.best_params_
-print("Best Accuracy: {:.2f}%".format(best_Acc2*100))
-print("Best Parameters:", best_parameters2)
+gridsearch = GridSearchCV(estimator=classifierSVM, param_grid=parameters, scoring= scorer, cv=10, n_jobs=-1)
+gridsearch.fit(x_train, y_train)
+best_Acc = gridsearch.best_score_
+best_parameters = gridsearch.best_params_
+print("Best Accuracy: {:.2f}%".format(best_Acc*100))
+print("Best Parameters:", best_parameters)
 ```
 Best Parameters: {'C': 1000, 'gamma': 0.001, 'kernel': 'rbf'}  
 
@@ -718,91 +718,33 @@ print("Specificity: {:.2f}%".format(SpecificityXGB))
 
 ### Dataset 1 Results:
 
-Naive-Bayes:  
-Accuracy: 79.55%  
-Standard Deviation: 3.15%  
-Recall: 68.61%  
-Specificity: 52.73%  
-
-SVM:  
-Accuracy: 84.57%  
-Standard Deviation: 0.51%  
-Recall: 51.94%  
-Specificity: 4.55%  
-
-Decision Tree:
-Accuracy: 75.72%  
-Standard Deviation: 3.58%  
-Recall: 57.26%  
-Specificity: 30.45%  
-
-Random Forest:  
-Accuracy: 83.23%  
-Standard Deviation: 3.07%  
-Recall: 59.67%  
-Specificity: 25.45%  
-
-XGBoost:
-Accuracy: 82.24%  
-Standard Deviation: 2.25%  
-Recall: 59.08%  
-Specificity: 25.45%  
-
+| Measure     | Naive-Bayes | SVM      |Decision Tree |Random Forest| XGBoost |
+|:-----------:|:-----------:|:--------:|:------------:|:-----------:|:-------:|
+| Accuracy    | 79.55%      | 84.57%   | 75.72%       | 83.23%      | 82.24%  |
+| Std Dev     | 3.15%       | 0.51%    | 3.58%        | 3.07%       | 2.25%   |
+| Recall      | 68.61%      | 51.94%   | 57.26%       | 59.67%      | 59.08%  |
+| Specificity | 52.73%      | 4.55%    | 30.45%       | 25.45%      | 25.45%  |
 <br/>
 
 ### Dataset 2 Results:  
 
-Naive-Bayes:    
-Accuracy: 78.56%  
-Standard Deviation: 2.69%  
-Recall: 77.82%  
-Specificity: 74.91%   
-
-SVM:    
-Accuracy: 80.96%  
-Standard Deviation: 3.10%  
-Recall: 79.94%  
-Specificity: 75.85%   
-  
-Decision Tree:  
-Accuracy: 72.04%  
-Standard Deviation: 4.58%  
-Recall: 70.16%  
-Specificity: 62.64%    
-  
-Random Forest:    
-Accuracy: 77.56%  
-Standard Deviation: 4.28%  
-Recall: 76.92%  
-Specificity: 74.34%    
-  
-XGBoost:  
-Accuracy: 78.27%  
-Standard Deviation: 3.61%  
-Recall: 76.92%  
-Specificity: 71.51%  
+| Measure     | Naive-Bayes | SVM      |Decision Tree |Random Forest| XGBoost |
+|:-----------:|:-----------:|:--------:|:------------:|:-----------:|:-------:|
+| Accuracy    | 78.56%      | 80.96%   | 72.04%       | 77.56%      | 78.27%  |
+| Std Dev     | 2.69%       | 3.10%    | 4.58%        | 4.28%       | 3.61%   |
+| Recall      | 77.82%      | 79.94%   | 70.16%       | 76.92%      | 76.92%  |
+| Specificity | 74.91%      | 75.85%   | 62.64%       | 74.34%      | 71.51%  |
 
 <br/>  
 
-### Dataset 3 Results:  
-  
-Naive-Bayes:    
-Accuracy: 69.28%  
-Standard Deviation: 3.92%  
-Recall: 64.80%  
-Specificity: 76.56%  
-  
-SVM:    
-Accuracy: 71.48%  
-Standard Deviation: 2.34%  
-Recall: 60.14%  
-Specificity: 89.77%   
-   
-XGBoost:  
-Accuracy: 67.60%  
-Standard Deviation: 4.01%  
-Recall: 59.44%  
-Specificity: 80.76%  
+### Dataset 3 Results: 
+
+| Measure     | Naive-Bayes | SVM      | XGBoost  |
+|:-----------:|:-----------:|:--------:|:--------:|
+| Accuracy    | 69.28%      | 71.48%   | 67.60%   |
+| Std Dev     | 3.92%       | 2.34%    | 4.01%    |
+| Recall      | 64.80%      | 60.14%   | 59.44%   | 
+| Specificity | 76.56%      | 89.77%   | 80.76%   |
 <br/>
 
 <p align="justify">One might conclude that the results highlight the importance of having either a) larger datasets or b) balanced datasets if the dataset is small. We noted earlier that dataset 1 is highly positively skewed, given that 1585 out of 1885 respondents had tried at least one illegal drug in their lifetimes. Dataset 3 on the other hand is negatively skewed, with 579 positives and 1306 negatives. Therefore the models that were trained with dataset 1 ended up doing a poor job of predicting negatives (low specificity) and the models trained with dataset 3 did a poor job of predicting positives (low recall). Models trained on dataset 2 on the other hand did an excellent job all around, which may be due to the fact that the response variable was more balanced.</p>  
@@ -815,7 +757,7 @@ Specificity: 80.76%
 <br/>
 <br/>
 
-### Feature importance  
+## Feature importance  
 
 <p align="justify">As mentioned earlier, some classification models possess the ability to reveal the  input features that were most influential in predicting the results. This was done on three dataset 2 models, given the fact that the models on this dataset were the highest performers. The models were Decision Tree, Random Forest and XGBoost.</p>  
 
@@ -825,44 +767,50 @@ print(feature_importancesDTC)
 ```
 <br/>
 
-### Decision Tree - Feature Importance  
-SS        -     0.175435  
-Oscore   -     0.135807  
-Nscore    -   0.129530  
-Cscore    -   0.107388  
-Escore     -  0.103259  
-Education -   0.102178  
-Age       -   0.102141  
-AScore    -   0.068667  
-Impulsive -   0.050702  
-Gender    -   0.024892  
+### Decision Tree - Feature Importance 
+
+| Feature    | Importance |     
+|:----------:|:----------:|    
+| SS         | 0.175435   |      
+| Oscore     | 0.135807   |     
+| Nscore     | 0.129530   |
+| Cscore     | 0.107388   |
+| Escore     | 0.103259   |
+| Education  | 0.102178   | 
+| Age        | 0.102141   |
+| AScore     | 0.068667   |
+| Impulsive  | 0.050702   |
+| Gender     | 0.024892   |
 <br/>
 
-### Random Forest - Feature Importance  
-SS       -    0.174336  
-Oscore    -   0.148482  
-Cscore    -   0.111611  
-Age       -   0.108487  
-Nscore    -   0.102254  
-Escore    -   0.101133  
-AScore     -  0.091322  
-Education  -  0.068495  
-Impulsive  -  0.058337  
-Gender    -   0.035543  
+### Random Forest - Feature Importance 
+| Feature    | Importance |     
+|:----------:|:----------:|    
+| SS         | 0.174336   |      
+| Oscore     | 0.148482   |     
+| Cscore     | 0.111611   |
+| Age        | 0.108487   |
+| Nscore     | 0.102254   |
+| Escore     | 0.101133   |
+| AScore     | 0.091322   | 
+| Education  | 0.068495   |   
+| Impulsive  | 0.058337   |
+| Gender     | 0.035543   |
 <br/>
 
-### XGBoost - Feature Importance  
-Age      -    0.210477  
-SS        -   0.184196  
-Gender    -   0.101149  
-Education  -  0.091023  
-Oscore    -   0.090485  
-Cscore    -   0.068642  
-Nscore    -   0.068575  
-Escore    -   0.065901  
-Impulsive  -  0.060518  
-AScore     -  0.059034  
-
+### XGBoost - Feature Importance
+| Feature    | Importance |     
+|:----------:|:----------:| 
+| Age        | 0.210477   |
+| SS         | 0.184196   | 
+| Gender     | 0.101149   |
+| Education  | 0.091023   |
+| Oscore     | 0.090485   |
+| Cscore     | 0.068642   |
+| Nscore     | 0.068575   |
+| Escore     | 0.065901   |
+| Impulsive  | 0.060518   |
+| AScore     | 0.059034   |    
 <br/>
 
 <p align="justify">One outcome that stands out immediately is that SS (sensation seeking) is shown to be the most important feature, beating out all of the Big Five personality traits. It gets first place for both Decision Tree and Random Forest, while taking second place for XGBoost (after age). Impulsivity on the other hand ranks very low for all three models. Taking a closer look at the Big Five, we can see that Openness, Conscientiousness and Neuroticism rank higher than Extraversion and Agreeableness for every model – with Openness always taking the top spot among the five.</p>  
